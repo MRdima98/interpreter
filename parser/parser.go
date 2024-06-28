@@ -199,6 +199,8 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 }
 
 func (p *Parser) parsePrefixExpression() ast.Expression {
+	fmt.Println(p.curToken)
+	fmt.Println(p.curToken.Literal)
 	expression := &ast.PrefixExpression{
 		Token:    p.curToken,
 		Operator: p.curToken.Literal,
