@@ -180,7 +180,7 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 
 	stmt.Expression = p.parseExpression(LOWEST)
 
-	fmt.Println("PARSE STATEMENT: ", stmt)
+	// fmt.Println("PARSE STATEMENT: ", stmt)
 
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()

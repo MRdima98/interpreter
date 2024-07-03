@@ -153,6 +153,7 @@ func (oe *InfixExpression) String() string {
 	out.WriteString("(")
 	out.WriteString(oe.Left.String())
 	out.WriteString(" " + oe.Operator + " ")
+	out.WriteString(oe.Right.String())
 	out.WriteString(")")
 
 	return out.String()

@@ -271,7 +271,6 @@ func TestParsingInfixExpressions(t *testing.T) {
 			t.Fatalf("exp.Operator is not '%s'. got=%s",
 				tt.operator, exp.Operator)
 		}
-
 		if !testIntegerLiteral(t, exp.Right, tt.rightValue) {
 			return
 		}
@@ -285,7 +284,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 	}{
 		{
 			"-a * b",
-			"((-a) *b)",
+			"((-a) * b)",
 		},
 		{
 			"!-a",
@@ -313,7 +312,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		},
 		{
 			"a + b * c + d / e - f",
-			"(((a+(b*c)) + (d / e)) - f)",
+			"(((a + (b * c)) + (d / e)) - f)",
 		},
 		{
 			"3 + 4; -5 *5",
@@ -325,7 +324,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		},
 		{
 			"5 < 4 != 3 > 4",
-			"((5 < 4) != (3 < 4))",
+			"((5 < 4) != (3 > 4))",
 		},
 		{
 			"5 < 4 != 3 > 4",
