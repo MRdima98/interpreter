@@ -50,7 +50,7 @@ push(myArray, 6) // => [1, 2, 3, 4, 5, 6]
 ## Next steps
 Only reading and understanding some code is fine, but not enough for me, therefore I will be using this as a starting 
 point to expand.
-# Additional features
+### Additional features
 The intention is to add OOP, to be more specific:
 - class keyword
 - class init
@@ -60,6 +60,6 @@ The intention is to add OOP, to be more specific:
 - private attributes
 - public attributes
 
-# Sandbox
+### Sandbox
 The program will be available as small website, which will execute the code.
 
