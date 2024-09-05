@@ -331,3 +331,43 @@ func (hl *HashLiteral) String() string {
 
 	return out.String()
 }
+
+type ClassStatement struct {
+	Token token.Token
+	Name  *Identifier
+	Value []Expression
+}
+
+func (ce *ClassStatement) statementNode()       {}
+func (ce *ClassStatement) TokenLiteral() string { return ce.Token.Literal }
+func (ce *ClassStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("{")
+	for _, value := range ce.Value {
+		out.WriteString(value.String() + ", ")
+	}
+	out.WriteString("}")
+
+	return out.String()
+}
+
+type ClassLiteral struct {
+	Token token.Token
+	Body  *[]BlockStatement
+}
+
+func (cl *ClassLiteral) expressionNode()      {}
+func (cl *ClassLiteral) TokenLiteral() string { return cl.Token.Literal }
+func (cl *ClassLiteral) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(cl.TokenLiteral())
+	out.WriteString("(")
+	for _, exp := range *cl.Body {
+		out.WriteString(exp.String() + ", ")
+	}
+	out.WriteString(")")
+
+	return out.String()
+}

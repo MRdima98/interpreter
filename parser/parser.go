@@ -69,6 +69,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
+	// p.registerPrefix(token.RBRACE, p.parseClassLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -119,9 +120,34 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseLetStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
+	case token.CLASS:
+		return p.parseClassStatement()
 	default:
 		return p.parseExpressionStatement()
 	}
+}
+
+func (p *Parser) parseClassStatement() ast.Statement {
+	stmt := &ast.ClassStatement{Token: p.curToken}
+
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+	p.nextToken()
+
+	for {
+		if p.curTokenIs(token.RBRACE) {
+			break
+		}
+		stmt.Value = append(stmt.Value, p.parseExpression(LOWEST))
+	}
+
+	return stmt
 }
 
 func (p *Parser) parseLetStatement() ast.Statement {
