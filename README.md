@@ -52,11 +52,11 @@ Only reading and understanding some code is fine, but not enough for me, therefo
 point to expand.
 ### Additional features
 The intention is to add OOP, to be more specific:
-- Class keyword
-- Class initialization
-- Inheritance
-- Polymorphism
-- Encapsulation
+- [ ] Class keyword
+- [ ] Class initialization
+- [ ] Inheritance
+- [ ] Polymorphism
+- [ ] Encapsulation
 
 ### Additional syntax
 ```js
