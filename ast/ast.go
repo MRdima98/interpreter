@@ -335,7 +335,7 @@ func (hl *HashLiteral) String() string {
 type ClassStatement struct {
 	Token token.Token
 	Name  *Identifier
-	Value []Expression
+	Block []Statement
 }
 
 func (ce *ClassStatement) statementNode()       {}
@@ -344,9 +344,7 @@ func (ce *ClassStatement) String() string {
 	var out bytes.Buffer
 
 	out.WriteString("{")
-	for _, value := range ce.Value {
-		out.WriteString(value.String() + ", ")
-	}
+	// out.WriteString(ce.Block.String())
 	out.WriteString("}")
 
 	return out.String()
@@ -354,7 +352,7 @@ func (ce *ClassStatement) String() string {
 
 type ClassLiteral struct {
 	Token token.Token
-	Body  *[]BlockStatement
+	Body  *BlockStatement
 }
 
 func (cl *ClassLiteral) expressionNode()      {}
@@ -364,9 +362,7 @@ func (cl *ClassLiteral) String() string {
 
 	out.WriteString(cl.TokenLiteral())
 	out.WriteString("(")
-	for _, exp := range *cl.Body {
-		out.WriteString(exp.String() + ", ")
-	}
+	out.WriteString(cl.Body.String())
 	out.WriteString(")")
 
 	return out.String()

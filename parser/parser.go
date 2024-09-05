@@ -144,7 +144,10 @@ func (p *Parser) parseClassStatement() ast.Statement {
 		if p.curTokenIs(token.RBRACE) {
 			break
 		}
-		stmt.Value = append(stmt.Value, p.parseExpression(LOWEST))
+		if stmt != nil {
+			stmt.Block = append(stmt.Block, p.parseLetStatement())
+		}
+		p.nextToken()
 	}
 
 	return stmt
