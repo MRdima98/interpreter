@@ -52,13 +52,65 @@ Only reading and understanding some code is fine, but not enough for me, therefo
 point to expand.
 ### Additional features
 The intention is to add OOP, to be more specific:
-- class keyword
-- class init
-- inheritance
-- polymorphism
-- encapsulation
-- private attributes
-- public attributes
+- Class keyword
+- Class initialization
+- Inheritance
+- Polymorphism
+- Encapsulation
+
+### Additional syntax
+```js
+// Class examle
+class A {
+    let a = 5;
+
+    let method = fn () {
+        return 3;
+    };
+};
+let a = new A();
+a.a; // => 5
+a.method(); // => 3
+
+// Inheritance
+class B : A {
+    let b = 6;
+
+    let method2 = fn () {
+        return 4;
+    };
+};
+let b = B();
+b.a; // => 5
+b.b; // => 6
+b.method2(); // => 4
+
+// Polymorphism
+class C : A {
+    let method = fn() { return 7 };
+};
+let c = C();
+c.method() // => 7
+
+// Encapsulation
+class D {
+    private let d;
+
+    let setD = fn(d) {
+        this.d = d;
+    };
+
+    let getD = fn() {
+        return this.d;
+    };
+};
+let d = new D();
+d.d; // error
+d.d = 5; // error
+d.setD(5); 
+d.getD(); // => 5
+```
+
 
 ### Sandbox
 The program will be available as small website, which will execute the code.
