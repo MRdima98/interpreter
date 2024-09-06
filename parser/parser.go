@@ -69,7 +69,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
-	// p.registerPrefix(token.RBRACE, p.parseClassLiteral)
+	p.registerPrefix(token.DOT, p.parseClassLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -82,6 +82,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.GT, p.parseInfixExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
+	p.registerInfix(token.DOT, p.parseCallExpression)
 
 	return p
 }
@@ -102,17 +103,28 @@ func (p *Parser) nextToken() {
 func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
+	classes := &ast.Program{}
+	classes.Statements = []ast.Statement{}
 
 	for p.curToken.Type != token.EOF {
 		stmt := p.parseStatement()
 		if stmt != nil {
 			program.Statements = append(program.Statements, stmt)
 		}
+		if _, ok := stmt.(*ast.ClassStatement); ok {
+			classes.Statements = append(classes.Statements, stmt)
+		}
 		p.nextToken()
 	}
 
-	// TODO check for class inits, and if there are copy the class
-	// definition in that spot
+	for _, class := range classes.Statements {
+		class := class.(*ast.ClassStatement)
+		for _, stmt := range program.Statements {
+			if stmt, ok := stmt.(*ast.ClassStatement); ok {
+				copy(stmt.Block, class.Block)
+			}
+		}
+	}
 	return program
 }
 
@@ -174,10 +186,15 @@ func (p *Parser) parseLetStatement() ast.Statement {
 
 	// parse every definition without adding the statement
 	if p.curTokenIs(token.NEW) {
-		stmt := &ast.ClassStatement{Token: token.Token{Type: token.CLASS}}
+		stmt2 := &ast.ClassStatement{Token: token.Token{Type: token.CLASS}}
 		p.nextToken()
-		fmt.Println(p.curToken)
-		fmt.Println()
+		stmt2.ClassName = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		stmt2.Name = stmt.Name
+		p.nextToken()
+		p.nextToken()
+		if p.peekTokenIs(token.SEMICOLON) {
+			p.nextToken()
+		}
 		return stmt
 	}
 
@@ -548,4 +565,10 @@ func (p *Parser) parseHashLiteral() ast.Expression {
 	}
 
 	return hash
+}
+
+func (p *Parser) parseClassLiteral() ast.Expression {
+	class := &ast.ClassLiteral{Token: p.curToken}
+	class.Body = p.parseExpression(LOWEST)
+	return class
 }

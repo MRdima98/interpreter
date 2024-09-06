@@ -353,7 +353,7 @@ func (ce *ClassStatement) String() string {
 
 type ClassLiteral struct {
 	Token token.Token
-	Body  *BlockStatement
+	Body  Expression
 }
 
 func (cl *ClassLiteral) expressionNode()      {}
