@@ -111,6 +111,8 @@ func (p *Parser) ParseProgram() *ast.Program {
 		p.nextToken()
 	}
 
+	// TODO check for class inits, and if there are copy the class
+	// definition in that spot
 	return program
 }
 
@@ -134,7 +136,7 @@ func (p *Parser) parseClassStatement() ast.Statement {
 		return nil
 	}
 
-	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	stmt.ClassName = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	if !p.expectPeek(token.LBRACE) {
 		return nil
 	}
@@ -144,9 +146,11 @@ func (p *Parser) parseClassStatement() ast.Statement {
 		if p.curTokenIs(token.RBRACE) {
 			break
 		}
-		if stmt != nil {
-			stmt.Block = append(stmt.Block, p.parseLetStatement())
-		}
+		stmt.Block = append(stmt.Block, p.parseLetStatement())
+		p.nextToken()
+	}
+
+	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
 
@@ -167,6 +171,15 @@ func (p *Parser) parseLetStatement() ast.Statement {
 	}
 
 	p.nextToken()
+
+	// parse every definition without adding the statement
+	if p.curTokenIs(token.NEW) {
+		stmt := &ast.ClassStatement{Token: token.Token{Type: token.CLASS}}
+		p.nextToken()
+		fmt.Println(p.curToken)
+		fmt.Println()
+		return stmt
+	}
 
 	stmt.Value = p.parseExpression(LOWEST)
 

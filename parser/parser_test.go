@@ -926,9 +926,10 @@ func TestParsingHashLiteralWithExpressions(t *testing.T) {
 
 func TestClassDefinition(t *testing.T) {
 	input := `class A {
-	let a = 5;
-	let b = fn(a) { return 6; };
-	}`
+		let a = 5;
+		let b = fn(a) { return a; };
+	}
+	`
 
 	l := lexer.New(input)
 	p := New(l)
@@ -949,3 +950,33 @@ func TestClassDefinition(t *testing.T) {
 	testLetStatement(t, stmt.Block[0], "a")
 	testLetStatement(t, stmt.Block[1], "b")
 }
+
+// func TestClassDeclaration(t *testing.T) {
+// 	input := `class A {
+// 		let a = 5;
+// 		let b = fn(a) { return a; };
+// 	};
+// 	let a = new A();
+// 	a.a;
+// 	a.b(3);
+// 	`
+//
+// 	l := lexer.New(input)
+// 	p := New(l)
+// 	program := p.ParseProgram()
+// 	checkParserErrors(t, p)
+//
+// 	if len(program.Statements) != 2 {
+// 		t.Fatalf("program.Body does not contain %d statements. got=%d\n",
+// 			2, len(program.Statements))
+// 	}
+//
+// 	// stmt, ok := program.Statements[0].(*ast.ClassStatement)
+// 	// if !ok {
+// 	// 	t.Fatalf("program.Statements[0] is not ast.ExpressionStatement, got=%T",
+// 	// 		program.Statements[0])
+// 	// }
+// 	//
+// 	// testLetStatement(t, stmt.Block[0], "a")
+// 	// testLetStatement(t, stmt.Block[1], "b")
+// }

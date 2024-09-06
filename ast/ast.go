@@ -333,9 +333,10 @@ func (hl *HashLiteral) String() string {
 }
 
 type ClassStatement struct {
-	Token token.Token
-	Name  *Identifier
-	Block []Statement
+	Token     token.Token
+	ClassName *Identifier
+	Name      *Identifier
+	Block     []Statement
 }
 
 func (ce *ClassStatement) statementNode()       {}

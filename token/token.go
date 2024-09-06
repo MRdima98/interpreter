@@ -41,6 +41,7 @@ const (
 	COLON     = ":"
 	CLASS     = "CLASS"
 	NEW       = "NEW"
+	DOT       = "DOT"
 )
 
 var keywords = map[string]TokenType{
