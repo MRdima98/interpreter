@@ -83,6 +83,8 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.GT, p.parseInfixExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
+	// this should probably be a parseClassExpression
+	// a class expression should know what she is based on your class
 	p.registerInfix(token.DOT, p.parseInfixExpression)
 
 	return p
@@ -122,10 +124,21 @@ func (p *Parser) ParseProgram() *ast.Program {
 		class := class.(*ast.ClassStatement)
 		for _, stmt := range program.Statements {
 			if stmt, ok := stmt.(*ast.ClassStatement); ok {
-				copy(stmt.Block, class.Block)
+				if stmt.Name != nil && len(stmt.Block) == 0 {
+					stmt.Block = append(stmt.Block, class.Block...)
+				}
 			}
 		}
 	}
+	// for _, stmt := range program.Statements {
+	// 	fmt.Println(stmt.String())
+	// 	if stmt, ok := stmt.(*ast.ClassStatement); ok {
+	// 		fmt.Println(stmt.Name)
+	// 		fmt.Println(stmt.ClassName)
+	// 		fmt.Println(stmt.Block)
+	// 	}
+	// 	fmt.Println()
+	// }
 	return program
 }
 
@@ -196,7 +209,7 @@ func (p *Parser) parseLetStatement() ast.Statement {
 		if p.peekTokenIs(token.SEMICOLON) {
 			p.nextToken()
 		}
-		return stmt
+		return stmt2
 	}
 
 	stmt.Value = p.parseExpression(LOWEST)

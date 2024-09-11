@@ -162,7 +162,7 @@ func TestReturnStatements(t *testing.T) {
 		expected int64
 	}{
 		{"return 10;", 10},
-		{"return 10; 9:", 10},
+		{"return 10; 9;", 10},
 		{"return 2 * 5; 9;", 10},
 		{"9; return 2 * 5; 9;", 10},
 		{`
@@ -541,4 +541,16 @@ func TestHashIndexExpression(t *testing.T) {
 			testNullObject(t, evaluated)
 		}
 	}
+}
+
+func TestClassObject(t *testing.T) {
+	input := `class A {
+		let a = 10;
+		let b = fn(a) { return a; };
+	};
+	let gimmy = new A();
+	gimmy.a;
+	`
+
+	testIntegerObject(t, testEval(input), 10)
 }
