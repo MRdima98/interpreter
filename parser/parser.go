@@ -18,6 +18,7 @@ const (
 	PREFIX
 	CALL
 	INDEX
+	DOT
 )
 
 var precedences = map[token.TokenType]int{
@@ -31,6 +32,7 @@ var precedences = map[token.TokenType]int{
 	token.ASTERISK: PRODUCT,
 	token.LPAREN:   CALL,
 	token.LBRACKET: INDEX,
+	token.DOT:      DOT,
 }
 
 type (
@@ -69,7 +71,6 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
-	p.registerPrefix(token.DOT, p.parseClassLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -82,7 +83,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.GT, p.parseInfixExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
-	p.registerInfix(token.DOT, p.parseCallExpression)
+	p.registerInfix(token.DOT, p.parseInfixExpression)
 
 	return p
 }
@@ -565,10 +566,4 @@ func (p *Parser) parseHashLiteral() ast.Expression {
 	}
 
 	return hash
-}
-
-func (p *Parser) parseClassLiteral() ast.Expression {
-	class := &ast.ClassLiteral{Token: p.curToken}
-	class.Body = p.parseExpression(LOWEST)
-	return class
 }

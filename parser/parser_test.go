@@ -975,20 +975,17 @@ func TestClassCalls(t *testing.T) {
 		let a = 5;
 		let b = fn(a) { return a; };
 	};
-	let a = new A();
-	a.a;
-	a.b(4);
+	let gimmy = new A();
+	gimmy.a;
+	gimmy.b(4);
 	`
 
 	l := lexer.New(input)
 	p := New(l)
 	program := p.ParseProgram()
-	// for _, s := range program.Statements {
-	// 	t.Log(s.TokenLiteral())
-	// }
 	checkParserErrors(t, p)
 
-	if len(program.Statements) != 2 {
+	if len(program.Statements) != 4 {
 		t.Fatalf("program.Body does not contain %d statements. got=%d\n",
 			2, len(program.Statements))
 	}
