@@ -96,8 +96,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.HashLiteral:
 		return evalHashLiteral(node, env)
 	case *ast.ClassStatement:
-		fmt.Println(node.Name)
-		fmt.Println(node.Block)
+		fmt.Println(node)
 		return nil
 	}
 

@@ -342,18 +342,26 @@ type ClassStatement struct {
 func (ce *ClassStatement) statementNode()       {}
 func (ce *ClassStatement) TokenLiteral() string { return ce.Token.Literal }
 func (ce *ClassStatement) String() string {
+	// Pls stampa tutto come dio conda
 	var out bytes.Buffer
 
-	out.WriteString("{")
-	// out.WriteString(ce.Block.String())
+	out.WriteString(ce.ClassName.String())
+	out.WriteString(" ")
+	out.WriteString(ce.Name.String())
+	out.WriteString(" {")
+	for _, stmt := range ce.Block {
+		out.WriteString(stmt.String())
+	}
 	out.WriteString("}")
 
 	return out.String()
 }
 
 type ClassLiteral struct {
-	Token token.Token
-	Body  Expression
+	Token     token.Token
+	ClassName *Identifier
+	Name      *Identifier
+	Block     []Statement
 }
 
 func (cl *ClassLiteral) expressionNode()      {}
@@ -363,7 +371,6 @@ func (cl *ClassLiteral) String() string {
 
 	out.WriteString(cl.TokenLiteral())
 	out.WriteString("(")
-	out.WriteString(cl.Body.String())
 	out.WriteString(")")
 
 	return out.String()

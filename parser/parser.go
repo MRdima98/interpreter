@@ -85,7 +85,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 	// this should probably be a parseClassExpression
 	// a class expression should know what she is based on your class
-	p.registerInfix(token.DOT, p.parseInfixExpression)
+	p.registerInfix(token.DOT, p.parseClassExpression)
 
 	return p
 }
@@ -130,15 +130,15 @@ func (p *Parser) ParseProgram() *ast.Program {
 			}
 		}
 	}
-	// for _, stmt := range program.Statements {
-	// 	fmt.Println(stmt.String())
-	// 	if stmt, ok := stmt.(*ast.ClassStatement); ok {
-	// 		fmt.Println(stmt.Name)
-	// 		fmt.Println(stmt.ClassName)
-	// 		fmt.Println(stmt.Block)
-	// 	}
-	// 	fmt.Println()
-	// }
+	for _, stmt := range program.Statements {
+		if stmt, ok := stmt.(*ast.ClassStatement); ok {
+			fmt.Println(stmt.Name)
+			fmt.Println(stmt.ClassName)
+			fmt.Println(stmt.Block)
+			fmt.Println(stmt.Token.Type)
+		}
+		fmt.Println()
+	}
 	return program
 }
 
@@ -579,4 +579,12 @@ func (p *Parser) parseHashLiteral() ast.Expression {
 	}
 
 	return hash
+}
+
+func (p *Parser) parseClassExpression(class ast.Expression) ast.Expression {
+	cl := class.(*ast.Identifier)
+	fmt.Println(cl.Token.Type)
+	fmt.Println(class.String())
+	fmt.Println(class.TokenLiteral())
+	return nil
 }
