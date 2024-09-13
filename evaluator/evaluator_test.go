@@ -566,3 +566,16 @@ func TestClassObjectMethods(t *testing.T) {
 
 	testIntegerObject(t, testEval(input), 5)
 }
+
+func TestClassInheritence(t *testing.T) {
+	input := `class A {
+		let a = 10;
+		let b = fn(a) { return a; };
+	};
+	class B : A{}
+	let gimmy = new B();
+	gimmy.a;
+	`
+
+	testIntegerObject(t, testEval(input), 10)
+}

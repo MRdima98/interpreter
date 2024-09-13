@@ -334,6 +334,7 @@ func (hl *HashLiteral) String() string {
 
 type ClassStatement struct {
 	Token     token.Token
+	Father    *Identifier
 	ClassName *Identifier
 	Name      *Identifier
 	Block     []Statement

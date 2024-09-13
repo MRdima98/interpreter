@@ -153,6 +153,12 @@ func (p *Parser) parseClassStatement() ast.Statement {
 	}
 
 	stmt.ClassName = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	if p.peekTokenIs(token.COLON) {
+		p.nextToken()
+		stmt.Father = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		p.nextToken()
+	}
+
 	if !p.expectPeek(token.LBRACE) {
 		return nil
 	}

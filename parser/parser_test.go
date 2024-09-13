@@ -991,3 +991,44 @@ func TestClassCalls(t *testing.T) {
 	}
 
 }
+
+func TestClassInheritance(t *testing.T) {
+	input := `class A {
+		let a = 5;
+		let b = fn(a) { return a; };
+	};
+	class B : A{};
+	let a = new B()
+	`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 3 {
+		t.Fatalf("program.Body does not contain %d statements. got=%d\n",
+			2, len(program.Statements))
+	}
+}
+
+func TestClassInheritanceCall(t *testing.T) {
+	input := `class A {
+		let b = 5;
+		let c = fn(a) { return a; };
+	};
+	class B : A{};
+	let a = new B();
+	a.b;
+	`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 4 {
+		t.Fatalf("program.Body does not contain %d statements. got=%d\n",
+			2, len(program.Statements))
+	}
+}
