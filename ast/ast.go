@@ -342,14 +342,18 @@ type ClassStatement struct {
 func (ce *ClassStatement) statementNode()       {}
 func (ce *ClassStatement) TokenLiteral() string { return ce.Token.Literal }
 func (ce *ClassStatement) String() string {
-	// Pls stampa tutto come dio conda
 	var out bytes.Buffer
 
-	out.WriteString(ce.ClassName.String())
+	if ce.ClassName != nil {
+		out.WriteString(ce.ClassName.String())
+	}
 	out.WriteString(" ")
-	out.WriteString(ce.Name.String())
+	if ce.Name != nil {
+		out.WriteString(ce.Name.String())
+	}
 	out.WriteString(" {")
 	for _, stmt := range ce.Block {
+		out.WriteString(" ")
 		out.WriteString(stmt.String())
 	}
 	out.WriteString("}")
@@ -357,21 +361,22 @@ func (ce *ClassStatement) String() string {
 	return out.String()
 }
 
-type ClassLiteral struct {
-	Token     token.Token
-	ClassName *Identifier
-	Name      *Identifier
-	Block     []Statement
+type ClassExpression struct {
+	Token    token.Token
+	Function *CallExpression
+	Variable Expression
 }
 
-func (cl *ClassLiteral) expressionNode()      {}
-func (cl *ClassLiteral) TokenLiteral() string { return cl.Token.Literal }
-func (cl *ClassLiteral) String() string {
+func (ce ClassExpression) expressionNode()      {}
+func (ce ClassExpression) TokenLiteral() string { return ce.Token.Literal }
+func (ce ClassExpression) String() string {
 	var out bytes.Buffer
 
-	out.WriteString(cl.TokenLiteral())
-	out.WriteString("(")
-	out.WriteString(")")
+	if ce.Variable != nil {
+		out.WriteString(ce.Variable.String())
+	} else {
+		out.WriteString(ce.Function.String())
+	}
 
 	return out.String()
 }

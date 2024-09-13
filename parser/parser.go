@@ -83,9 +83,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.GT, p.parseInfixExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
-	// this should probably be a parseClassExpression
-	// a class expression should know what she is based on your class
-	p.registerInfix(token.DOT, p.parseClassExpression)
+	p.registerInfix(token.DOT, p.parseClassLiteral)
 
 	return p
 }
@@ -130,15 +128,12 @@ func (p *Parser) ParseProgram() *ast.Program {
 			}
 		}
 	}
+
 	for _, stmt := range program.Statements {
-		if stmt, ok := stmt.(*ast.ClassStatement); ok {
-			fmt.Println(stmt.Name)
-			fmt.Println(stmt.ClassName)
-			fmt.Println(stmt.Block)
-			fmt.Println(stmt.Token.Type)
-		}
+		fmt.Println("each stmt: ", stmt)
 		fmt.Println()
 	}
+
 	return program
 }
 
@@ -209,7 +204,7 @@ func (p *Parser) parseLetStatement() ast.Statement {
 		if p.peekTokenIs(token.SEMICOLON) {
 			p.nextToken()
 		}
-		return stmt2
+		return stmt
 	}
 
 	stmt.Value = p.parseExpression(LOWEST)
@@ -476,6 +471,8 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 
 func (p *Parser) parseCallExpression(function ast.Expression) ast.Expression {
 	exp := &ast.CallExpression{Token: p.curToken, Function: function}
+	// fmt.Println("function", function)
+	// fmt.Println("func tokk", p.curToken)
 	exp.Arguments = p.parseExpressionList(token.RPAREN)
 	return exp
 }
@@ -516,6 +513,7 @@ func (p *Parser) parseArrayLiteral() ast.Expression {
 
 func (p *Parser) parseExpressionList(end token.TokenType) []ast.Expression {
 	list := []ast.Expression{}
+	// fmt.Println("entry token: ", p.curToken)
 
 	if p.peekTokenIs(end) {
 		p.nextToken()
@@ -531,9 +529,14 @@ func (p *Parser) parseExpressionList(end token.TokenType) []ast.Expression {
 		list = append(list, p.parseExpression(LOWEST))
 	}
 
+	// fmt.Println("END: ", end)
+	// fmt.Println("peek: ", p.peekToken)
+	// fmt.Println("curr: ", p.curToken)
+	// fmt.Println("list: ", list)
 	if !p.expectPeek(end) {
 		return nil
 	}
+	// fmt.Println("ARGUMENS: ", p.curToken)
 
 	return list
 }
@@ -549,6 +552,7 @@ func (p *Parser) parseIndexExpression(left ast.Expression) ast.Expression {
 		return nil
 	}
 
+	// fmt.Println("ENDGAME")
 	return exp
 }
 
@@ -581,10 +585,23 @@ func (p *Parser) parseHashLiteral() ast.Expression {
 	return hash
 }
 
-func (p *Parser) parseClassExpression(class ast.Expression) ast.Expression {
-	cl := class.(*ast.Identifier)
-	fmt.Println(cl.Token.Type)
-	fmt.Println(class.String())
-	fmt.Println(class.TokenLiteral())
-	return nil
+func (p *Parser) parseClassLiteral(class ast.Expression) ast.Expression {
+	cl := ast.ClassExpression{Token: token.Token{Type: token.CLASS, Literal: class.TokenLiteral()}}
+	p.nextToken()
+	if !p.peekTokenIs(token.LPAREN) {
+		cl.Variable = p.parseExpression(LOWEST)
+	} else {
+		// fmt.Println("curr token: ", p.curToken)
+		// fmt.Println()
+		// fmt.Println()
+		// fmt.Println()
+		// fmt.Println()
+		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		p.nextToken()
+		exp, _ := p.parseCallExpression(ident).(*ast.CallExpression)
+		cl.Function = exp
+	}
+	// fmt.Println("curr fun: ", cl.Function)
+
+	return cl
 }
