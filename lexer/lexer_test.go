@@ -28,7 +28,11 @@ func TestNextToken(t *testing.T) {
 	"foobar"
 	"foo bar"
 	[1, 2];
-	{"foo": "bar"}
+	{"foo": "bar"};
+	class Hello { };
+	let h = new Hello ();
+	h.b;
+	h.c()
 	`
 
 	tests := []struct {
@@ -121,6 +125,29 @@ func TestNextToken(t *testing.T) {
 		{token.COLON, ":"},
 		{token.STRING, "bar"},
 		{token.RBRACE, "}"},
+		{token.SEMICOLON, ";"},
+		{token.CLASS, "class"},
+		{token.IDENT, "Hello"},
+		{token.LBRACE, "{"},
+		{token.RBRACE, "}"},
+		{token.SEMICOLON, ";"},
+		{token.LET, "let"},
+		{token.IDENT, "h"},
+		{token.ASSIGN, "="},
+		{token.NEW, "new"},
+		{token.IDENT, "Hello"},
+		{token.LPAREN, "("},
+		{token.RPAREN, ")"},
+		{token.SEMICOLON, ";"},
+		{token.IDENT, "h"},
+		{token.DOT, "."},
+		{token.IDENT, "b"},
+		{token.SEMICOLON, ";"},
+		{token.IDENT, "h"},
+		{token.DOT, "."},
+		{token.IDENT, "c"},
+		{token.LPAREN, "("},
+		{token.RPAREN, ")"},
 		{token.EOF, ""},
 	}
 

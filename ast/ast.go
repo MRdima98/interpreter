@@ -331,3 +331,52 @@ func (hl *HashLiteral) String() string {
 
 	return out.String()
 }
+
+type ClassStatement struct {
+	Token     token.Token
+	ClassName *Identifier
+	Name      *Identifier
+	Block     []Statement
+}
+
+func (ce *ClassStatement) statementNode()       {}
+func (ce *ClassStatement) TokenLiteral() string { return ce.Token.Literal }
+func (ce *ClassStatement) String() string {
+	var out bytes.Buffer
+
+	if ce.ClassName != nil {
+		out.WriteString(ce.ClassName.String())
+	}
+	out.WriteString(" ")
+	if ce.Name != nil {
+		out.WriteString(ce.Name.String())
+	}
+	out.WriteString(" {")
+	for _, stmt := range ce.Block {
+		out.WriteString(" ")
+		out.WriteString(stmt.String())
+	}
+	out.WriteString("}")
+
+	return out.String()
+}
+
+type ClassExpression struct {
+	Token    token.Token
+	Function *CallExpression
+	Variable Expression
+}
+
+func (ce ClassExpression) expressionNode()      {}
+func (ce ClassExpression) TokenLiteral() string { return ce.Token.Literal }
+func (ce ClassExpression) String() string {
+	var out bytes.Buffer
+
+	if ce.Variable != nil {
+		out.WriteString(ce.Variable.String())
+	} else {
+		out.WriteString(ce.Function.String())
+	}
+
+	return out.String()
+}

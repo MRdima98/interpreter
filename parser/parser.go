@@ -18,6 +18,7 @@ const (
 	PREFIX
 	CALL
 	INDEX
+	DOT
 )
 
 var precedences = map[token.TokenType]int{
@@ -31,6 +32,7 @@ var precedences = map[token.TokenType]int{
 	token.ASTERISK: PRODUCT,
 	token.LPAREN:   CALL,
 	token.LBRACKET: INDEX,
+	token.DOT:      DOT,
 }
 
 type (
@@ -81,6 +83,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.GT, p.parseInfixExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
+	p.registerInfix(token.DOT, p.parseClassLiteral)
 
 	return p
 }
@@ -101,13 +104,29 @@ func (p *Parser) nextToken() {
 func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
+	classes := &ast.Program{}
+	classes.Statements = []ast.Statement{}
 
 	for p.curToken.Type != token.EOF {
 		stmt := p.parseStatement()
 		if stmt != nil {
 			program.Statements = append(program.Statements, stmt)
 		}
+		if _, ok := stmt.(*ast.ClassStatement); ok {
+			classes.Statements = append(classes.Statements, stmt)
+		}
 		p.nextToken()
+	}
+
+	for _, class := range classes.Statements {
+		class := class.(*ast.ClassStatement)
+		for _, stmt := range program.Statements {
+			if stmt, ok := stmt.(*ast.ClassStatement); ok {
+				if stmt.Name != nil && len(stmt.Block) == 0 {
+					stmt.Block = append(stmt.Block, class.Block...)
+				}
+			}
+		}
 	}
 
 	return program
@@ -119,9 +138,39 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseLetStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
+	case token.CLASS:
+		return p.parseClassStatement()
 	default:
 		return p.parseExpressionStatement()
 	}
+}
+
+func (p *Parser) parseClassStatement() ast.Statement {
+	stmt := &ast.ClassStatement{Token: p.curToken}
+
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	stmt.ClassName = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+	p.nextToken()
+
+	for {
+		if p.curTokenIs(token.RBRACE) {
+			break
+		}
+		stmt.Block = append(stmt.Block, p.parseLetStatement())
+		p.nextToken()
+	}
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
 }
 
 func (p *Parser) parseLetStatement() ast.Statement {
@@ -138,6 +187,20 @@ func (p *Parser) parseLetStatement() ast.Statement {
 	}
 
 	p.nextToken()
+
+	// parse every definition without adding the statement
+	if p.curTokenIs(token.NEW) {
+		stmt2 := &ast.ClassStatement{Token: token.Token{Type: token.CLASS}}
+		p.nextToken()
+		stmt2.ClassName = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		stmt2.Name = stmt.Name
+		p.nextToken()
+		p.nextToken()
+		if p.peekTokenIs(token.SEMICOLON) {
+			p.nextToken()
+		}
+		return stmt2
+	}
 
 	stmt.Value = p.parseExpression(LOWEST)
 
@@ -506,4 +569,18 @@ func (p *Parser) parseHashLiteral() ast.Expression {
 	}
 
 	return hash
+}
+
+func (p *Parser) parseClassLiteral(class ast.Expression) ast.Expression {
+	cl := ast.ClassExpression{Token: token.Token{Type: token.CLASS, Literal: class.TokenLiteral()}}
+	p.nextToken()
+	if !p.peekTokenIs(token.LPAREN) {
+		cl.Variable = p.parseExpression(LOWEST)
+	} else {
+		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		p.nextToken()
+		exp, _ := p.parseCallExpression(ident).(*ast.CallExpression)
+		cl.Function = exp
+	}
+	return cl
 }

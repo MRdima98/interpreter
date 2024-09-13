@@ -39,6 +39,9 @@ const (
 	NOT_EQ    = "!="
 	STRING    = "STRING"
 	COLON     = ":"
+	CLASS     = "CLASS"
+	NEW       = "NEW"
+	DOT       = "DOT"
 )
 
 var keywords = map[string]TokenType{
@@ -49,6 +52,8 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
+	"class":  CLASS,
+	"new":    NEW,
 }
 
 func LookupIdent(ident string) TokenType {
