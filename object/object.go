@@ -19,6 +19,7 @@ const (
 	BUILTIN_OBJ      = "BUILTIN"
 	ARRAY_OBJ        = "ARRAY"
 	HASH_OBJ         = "HASH"
+	CLASS_OBJ        = "CLASS"
 )
 
 type ObjectType string
@@ -178,4 +179,24 @@ func (h *Hash) Inspect() string {
 
 type Hashable interface {
 	HashKey() HashKey
+}
+
+type Class struct {
+	Body []ast.Statement
+	Env  *Environment
+}
+
+func (c *Class) Type() ObjectType { return CLASS_OBJ }
+func (c *Class) Inspect() string {
+	var out bytes.Buffer
+
+	out.WriteString("obj")
+	out.WriteString("{")
+	for _, stmt := range c.Body {
+		out.WriteString(stmt.String())
+	}
+	out.WriteString("} {\n")
+	out.WriteString("\n}")
+
+	return out.String()
 }

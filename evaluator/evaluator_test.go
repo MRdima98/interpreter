@@ -543,7 +543,7 @@ func TestHashIndexExpression(t *testing.T) {
 	}
 }
 
-func TestClassObject(t *testing.T) {
+func TestClassObjectVars(t *testing.T) {
 	input := `class A {
 		let a = 10;
 		let b = fn(a) { return a; };
@@ -553,4 +553,16 @@ func TestClassObject(t *testing.T) {
 	`
 
 	testIntegerObject(t, testEval(input), 10)
+}
+
+func TestClassObjectMethods(t *testing.T) {
+	input := `class A {
+		let a = 10;
+		let b = fn(a) { return a; };
+	};
+	let gimmy = new A();
+	gimmy.b(5);
+	`
+
+	testIntegerObject(t, testEval(input), 5)
 }

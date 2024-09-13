@@ -57,12 +57,14 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return val
 		}
 		env.Set(node.Name.Value, val)
+
 	case *ast.ReturnStatement:
 		val := Eval(node.ReturnValue, env)
 		if isError(val) {
 			return val
 		}
 		return &object.ReturnValue{Value: val}
+
 	case *ast.InfixExpression:
 		left := Eval(node.Left, env)
 		if isError(left) {
@@ -95,8 +97,22 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	case *ast.HashLiteral:
 		return evalHashLiteral(node, env)
+
 	case *ast.ClassStatement:
-		fmt.Println(node)
+		for _, stmt := range node.Block {
+			if node.Name != nil {
+				env.Set(node.Name.String(), Eval(stmt, env))
+			}
+		}
+		return nil
+
+	case ast.ClassExpression:
+		if node.Variable != nil {
+			return Eval(node.Variable, env)
+		}
+		if node.Function != nil {
+			return Eval(node.Function, env)
+		}
 		return nil
 	}
 
