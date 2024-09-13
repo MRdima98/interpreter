@@ -54,7 +54,7 @@ point to expand.
 The intention is to add OOP, to be more specific:
 - [x] Class keyword
 - [x] Class initialization
-- [ ] Inheritance
+- [x] Inheritance
 - [ ] Polymorphism
 - [ ] Encapsulation
 
