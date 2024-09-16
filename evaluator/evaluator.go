@@ -104,20 +104,12 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 		classEnv := object.NewEnclosedEnvironment(env)
 		for _, stmt := range node.Block {
-			// fmt.Println(env)
 			classEnv.Set(node.Name.String(), Eval(stmt, classEnv))
 		}
 		env.SetClassEnv(classEnv)
-		// fmt.Println("env: ", env)
-		fmt.Println("clEnv: ", classEnv)
-		gotem, ok := classEnv.Get("a")
-		fmt.Println("a: ", gotem, ok)
-		fmt.Println("class: ", node.ClassName)
-		fmt.Println("class: ", node.Block)
 		return nil
 
 	case ast.ClassExpression:
-		// fmt.Println("exp env: ", env)
 		if node.Variable != nil {
 			return Eval(node.Variable, env.GetClassEnv())
 		}

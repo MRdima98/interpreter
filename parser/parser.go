@@ -118,7 +118,6 @@ func (p *Parser) ParseProgram() *ast.Program {
 		p.nextToken()
 	}
 
-	//problem is here, you have to correctly put this in place
 	for _, class := range classes.Statements {
 		class := class.(*ast.ClassStatement)
 		for _, stmt := range program.Statements {
@@ -126,27 +125,44 @@ func (p *Parser) ParseProgram() *ast.Program {
 			if !ok {
 				continue
 			}
-			if stmt.Name != nil && len(stmt.Block) == 0 {
+			if stmt.Name != nil && len(stmt.Block) == 0 && stmt.ClassName.String() == class.ClassName.String() {
 				stmt.Block = append(stmt.Block, class.Block...)
+				if class.Father != nil {
+					stmt.Father = class.Father
+				}
+			}
+		}
+	}
+
+	for _, class := range classes.Statements {
+		class := class.(*ast.ClassStatement)
+		for _, stmt := range program.Statements {
+			stmt, ok := stmt.(*ast.ClassStatement)
+			if !ok {
+				continue
 			}
 			if stmt.Father == nil {
 				continue
 			}
-			for _, class := range classes.Statements {
-				class := class.(*ast.ClassStatement)
-				if class.ClassName.Value != stmt.Father.Value {
-					continue
-				}
-				for _, father := range class.Block {
-					for _, son := range stmt.Block {
-						if son.TokenLiteral() != father.TokenLiteral() {
-							stmt.Block = append(stmt.Block, father)
+			if stmt.Name != nil && stmt.Father.String() == class.ClassName.String() {
+				for _, fatherAttr := range class.Block {
+					present := false
+					for _, sonAttr := range stmt.Block {
+						if fatherAttr.TokenLiteral() == sonAttr.TokenLiteral() {
+							present = true
 						}
+					}
+					if !present {
+						stmt.Block = append(stmt.Block, fatherAttr)
 					}
 				}
 			}
 		}
 	}
+
+	// for _, stmt := range program.Statements {
+	// 	fmt.Println(stmt)
+	// }
 
 	return program
 }
