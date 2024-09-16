@@ -55,7 +55,7 @@ The intention is to add OOP, to be more specific:
 - [x] Class keyword
 - [x] Class initialization
 - [x] Inheritance
-- [ ] Polymorphism
+- [x] Polymorphism
 - [ ] Encapsulation
 
 ### Additional syntax
