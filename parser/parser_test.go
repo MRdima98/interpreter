@@ -1032,3 +1032,25 @@ func TestClassInheritanceCall(t *testing.T) {
 			2, len(program.Statements))
 	}
 }
+
+func TestClassPolymorphism(t *testing.T) {
+	input := `class A {
+		let b = 5;
+	};
+	class B : A{
+		let b = 10;
+	};
+	let a = new B();
+	a.b;
+	`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 4 {
+		t.Fatalf("program.Body does not contain %d statements. got=%d\n",
+			2, len(program.Statements))
+	}
+}

@@ -121,9 +121,41 @@ func (p *Parser) ParseProgram() *ast.Program {
 	for _, class := range classes.Statements {
 		class := class.(*ast.ClassStatement)
 		for _, stmt := range program.Statements {
-			if stmt, ok := stmt.(*ast.ClassStatement); ok {
-				if stmt.Name != nil && len(stmt.Block) == 0 {
-					stmt.Block = append(stmt.Block, class.Block...)
+			stmt, ok := stmt.(*ast.ClassStatement)
+			if !ok {
+				continue
+			}
+			if stmt.Name != nil && len(stmt.Block) == 0 && stmt.ClassName.String() == class.ClassName.String() {
+				stmt.Block = append(stmt.Block, class.Block...)
+				if class.Father != nil {
+					stmt.Father = class.Father
+				}
+			}
+		}
+	}
+
+	for _, class := range classes.Statements {
+		class := class.(*ast.ClassStatement)
+		for _, stmt := range program.Statements {
+			stmt, ok := stmt.(*ast.ClassStatement)
+			if !ok {
+				continue
+			}
+			if stmt.Father == nil {
+				continue
+			}
+			if stmt.Name == nil && stmt.Father.String() == class.ClassName.String() {
+				continue
+			}
+			for _, fatherAttr := range class.Block {
+				present := false
+				for _, sonAttr := range stmt.Block {
+					if fatherAttr.TokenLiteral() == sonAttr.TokenLiteral() {
+						present = true
+					}
+				}
+				if !present {
+					stmt.Block = append(stmt.Block, fatherAttr)
 				}
 			}
 		}
@@ -155,8 +187,8 @@ func (p *Parser) parseClassStatement() ast.Statement {
 	stmt.ClassName = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	if p.peekTokenIs(token.COLON) {
 		p.nextToken()
-		stmt.Father = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 		p.nextToken()
+		stmt.Father = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	}
 
 	if !p.expectPeek(token.LBRACE) {

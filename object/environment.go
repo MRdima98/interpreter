@@ -6,6 +6,12 @@ func NewEnclosedEnvironment(outer *Environment) *Environment {
 	return env
 }
 
+func NewClassEnv(outer *Environment) *Environment {
+	env := NewEnvironment()
+	env.outer = outer
+	return env
+}
+
 func NewEnvironment() *Environment {
 	s := make(map[string]Object)
 	return &Environment{store: s, outer: nil}
@@ -14,6 +20,7 @@ func NewEnvironment() *Environment {
 type Environment struct {
 	store map[string]Object
 	outer *Environment
+	class *Environment
 }
 
 func (e *Environment) Get(name string) (Object, bool) {
@@ -27,4 +34,13 @@ func (e *Environment) Get(name string) (Object, bool) {
 func (e *Environment) Set(name string, val Object) Object {
 	e.store[name] = val
 	return val
+}
+
+func (e *Environment) SetClassEnv(classEnv *Environment) *Environment {
+	e.class = classEnv
+	return e
+}
+
+func (e *Environment) GetClassEnv() *Environment {
+	return e.class
 }
