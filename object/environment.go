@@ -20,7 +20,7 @@ func NewEnvironment() *Environment {
 type Environment struct {
 	store map[string]Object
 	outer *Environment
-	class *Environment
+	class map[string]*Environment
 }
 
 func (e *Environment) Get(name string) (Object, bool) {
@@ -36,11 +36,14 @@ func (e *Environment) Set(name string, val Object) Object {
 	return val
 }
 
-func (e *Environment) SetClassEnv(classEnv *Environment) *Environment {
-	e.class = classEnv
+func (e *Environment) SetClassEnv(classEnv *Environment, className string) *Environment {
+	if e.class == nil {
+		e.class = map[string]*Environment{}
+	}
+	e.class[className] = classEnv
 	return e
 }
 
-func (e *Environment) GetClassEnv() *Environment {
-	return e.class
+func (e *Environment) GetClassEnv(className string) *Environment {
+	return e.class[className]
 }

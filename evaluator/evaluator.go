@@ -109,26 +109,24 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		for _, stmt := range node.Block {
 			classEnv.Set(node.Name.String(), Eval(stmt, classEnv))
 		}
-		env.SetClassEnv(classEnv)
+		env.SetClassEnv(classEnv, node.Name.TokenLiteral())
 		return nil
 
 	case ast.ClassExpression:
 		if node.Variable != nil {
-			privateObj, ok := env.GetClassEnv().Get("private" + node.Variable.TokenLiteral())
+			privateObj, ok := env.GetClassEnv(node.TokenLiteral()).Get("private" + node.Variable.TokenLiteral())
 			if ok {
 				private := privateObj.(*object.Boolean)
 				if private.Value {
 					return newError("No attribute like this!")
 				}
 			}
-			return Eval(node.Variable, env.GetClassEnv())
+			return Eval(node.Variable, env.GetClassEnv(node.TokenLiteral()))
 		}
 		if node.Function != nil {
-			return Eval(node.Function, env.GetClassEnv())
+			return Eval(node.Function, env.GetClassEnv(node.TokenLiteral()))
 		}
-		return nil
 	}
-
 	return nil
 }
 
