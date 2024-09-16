@@ -56,7 +56,7 @@ The intention is to add OOP, to be more specific:
 - [x] Class initialization
 - [x] Inheritance
 - [x] Polymorphism
-- [ ] Encapsulation
+- [x] Encapsulation
 
 ### Additional syntax
 ```js
@@ -92,13 +92,9 @@ class C : A {
 let c = C();
 c.method() // => 7
 
-// Encapsulation
+// Half encapsulation
 class D {
     private let d;
-
-    let setD = fn(d) {
-        this.d = d;
-    };
 
     let getD = fn() {
         return this.d;
@@ -106,11 +102,11 @@ class D {
 };
 let d = new D();
 d.d; // error
-d.d = 5; // error
-d.setD(5); 
 d.getD(); // => 5
 ```
 
+Unfortunately assign operation is not supported by the language, I could add it...
+but I feel educated enough, time to move forward.
 
 ### Sandbox
 The program will be available as small website, which will execute the code.

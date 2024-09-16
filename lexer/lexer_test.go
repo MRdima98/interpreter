@@ -33,7 +33,8 @@ func TestNextToken(t *testing.T) {
 	let h = new Hello ();
 	h.b;
 	h.c();
-	class Bambi : Hello {}
+	class Bambi : Hello {};
+	let private b
 	`
 
 	tests := []struct {
@@ -156,6 +157,10 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "Hello"},
 		{token.LBRACE, "{"},
 		{token.RBRACE, "}"},
+		{token.SEMICOLON, ";"},
+		{token.LET, "let"},
+		{token.PRIVATE, "private"},
+		{token.IDENT, "b"},
 		{token.EOF, ""},
 	}
 
