@@ -118,12 +118,31 @@ func (p *Parser) ParseProgram() *ast.Program {
 		p.nextToken()
 	}
 
+	//problem is here, you have to correctly put this in place
 	for _, class := range classes.Statements {
 		class := class.(*ast.ClassStatement)
 		for _, stmt := range program.Statements {
-			if stmt, ok := stmt.(*ast.ClassStatement); ok {
-				if stmt.Name != nil && len(stmt.Block) == 0 {
-					stmt.Block = append(stmt.Block, class.Block...)
+			stmt, ok := stmt.(*ast.ClassStatement)
+			if !ok {
+				continue
+			}
+			if stmt.Name != nil && len(stmt.Block) == 0 {
+				stmt.Block = append(stmt.Block, class.Block...)
+			}
+			if stmt.Father == nil {
+				continue
+			}
+			for _, class := range classes.Statements {
+				class := class.(*ast.ClassStatement)
+				if class.ClassName.Value != stmt.Father.Value {
+					continue
+				}
+				for _, father := range class.Block {
+					for _, son := range stmt.Block {
+						if son.TokenLiteral() != father.TokenLiteral() {
+							stmt.Block = append(stmt.Block, father)
+						}
+					}
 				}
 			}
 		}
@@ -155,8 +174,8 @@ func (p *Parser) parseClassStatement() ast.Statement {
 	stmt.ClassName = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	if p.peekTokenIs(token.COLON) {
 		p.nextToken()
-		stmt.Father = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 		p.nextToken()
+		stmt.Father = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	}
 
 	if !p.expectPeek(token.LBRACE) {

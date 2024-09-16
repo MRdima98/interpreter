@@ -579,3 +579,17 @@ func TestClassInheritence(t *testing.T) {
 
 	testIntegerObject(t, testEval(input), 10)
 }
+
+func TestClassPolymorphism(t *testing.T) {
+	input := `class A {
+		let a = 10;
+	};
+	class B : A{
+		let a = 8;
+	}
+	let gimmy = new B();
+	gimmy.a;
+	`
+
+	testIntegerObject(t, testEval(input), 8)
+}

@@ -99,19 +99,30 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return evalHashLiteral(node, env)
 
 	case *ast.ClassStatement:
-		for _, stmt := range node.Block {
-			if node.Name != nil {
-				env.Set(node.Name.String(), Eval(stmt, env))
-			}
+		if node.Name == nil {
+			return nil
 		}
+		classEnv := object.NewEnclosedEnvironment(env)
+		for _, stmt := range node.Block {
+			// fmt.Println(env)
+			classEnv.Set(node.Name.String(), Eval(stmt, classEnv))
+		}
+		env.SetClassEnv(classEnv)
+		// fmt.Println("env: ", env)
+		fmt.Println("clEnv: ", classEnv)
+		gotem, ok := classEnv.Get("a")
+		fmt.Println("a: ", gotem, ok)
+		fmt.Println("class: ", node.ClassName)
+		fmt.Println("class: ", node.Block)
 		return nil
 
 	case ast.ClassExpression:
+		// fmt.Println("exp env: ", env)
 		if node.Variable != nil {
-			return Eval(node.Variable, env)
+			return Eval(node.Variable, env.GetClassEnv())
 		}
 		if node.Function != nil {
-			return Eval(node.Function, env)
+			return Eval(node.Function, env.GetClassEnv())
 		}
 		return nil
 	}
