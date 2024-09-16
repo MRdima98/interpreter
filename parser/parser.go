@@ -144,25 +144,22 @@ func (p *Parser) ParseProgram() *ast.Program {
 			if stmt.Father == nil {
 				continue
 			}
-			if stmt.Name != nil && stmt.Father.String() == class.ClassName.String() {
-				for _, fatherAttr := range class.Block {
-					present := false
-					for _, sonAttr := range stmt.Block {
-						if fatherAttr.TokenLiteral() == sonAttr.TokenLiteral() {
-							present = true
-						}
+			if stmt.Name == nil && stmt.Father.String() == class.ClassName.String() {
+				continue
+			}
+			for _, fatherAttr := range class.Block {
+				present := false
+				for _, sonAttr := range stmt.Block {
+					if fatherAttr.TokenLiteral() == sonAttr.TokenLiteral() {
+						present = true
 					}
-					if !present {
-						stmt.Block = append(stmt.Block, fatherAttr)
-					}
+				}
+				if !present {
+					stmt.Block = append(stmt.Block, fatherAttr)
 				}
 			}
 		}
 	}
-
-	// for _, stmt := range program.Statements {
-	// 	fmt.Println(stmt)
-	// }
 
 	return program
 }
