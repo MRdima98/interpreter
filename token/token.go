@@ -42,18 +42,20 @@ const (
 	CLASS     = "CLASS"
 	NEW       = "NEW"
 	DOT       = "DOT"
+	PRIVATE   = "PRIVATE"
 )
 
 var keywords = map[string]TokenType{
-	"fn":     FUNCTION,
-	"let":    LET,
-	"true":   TRUE,
-	"false":  FALSE,
-	"if":     IF,
-	"else":   ELSE,
-	"return": RETURN,
-	"class":  CLASS,
-	"new":    NEW,
+	"fn":      FUNCTION,
+	"let":     LET,
+	"true":    TRUE,
+	"false":   FALSE,
+	"if":      IF,
+	"else":    ELSE,
+	"return":  RETURN,
+	"class":   CLASS,
+	"new":     NEW,
+	"private": PRIVATE,
 }
 
 func LookupIdent(ident string) TokenType {

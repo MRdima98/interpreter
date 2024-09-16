@@ -57,6 +57,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return val
 		}
 		env.Set(node.Name.Value, val)
+		if node.Private {
+			env.Set("private"+node.Name.Value, TRUE)
+		}
 
 	case *ast.ReturnStatement:
 		val := Eval(node.ReturnValue, env)
@@ -111,6 +114,13 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	case ast.ClassExpression:
 		if node.Variable != nil {
+			privateObj, ok := env.GetClassEnv().Get("private" + node.Variable.TokenLiteral())
+			if ok {
+				private := privateObj.(*object.Boolean)
+				if private.Value {
+					return newError("No attribute like this!")
+				}
+			}
 			return Eval(node.Variable, env.GetClassEnv())
 		}
 		if node.Function != nil {

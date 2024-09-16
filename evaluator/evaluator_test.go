@@ -593,3 +593,33 @@ func TestClassPolymorphism(t *testing.T) {
 
 	testIntegerObject(t, testEval(input), 8)
 }
+
+func TestClassPrivateAttr(t *testing.T) {
+	input := `class A {
+		let private a = 10;
+	};
+	let gimmy = new A();
+	gimmy.a;
+	`
+
+	result := testEval(input)
+	if result.Inspect() != "ERROR: No attribute like this!" {
+		t.Error("You should not be able to access this!")
+	}
+
+}
+
+func TestClassGetter(t *testing.T) {
+	input := `class A {
+		let private d = 10;
+		let getD = fn(){
+			return d;
+		}
+	};
+	let gimmy = new A();
+	gimmy.getD()
+	`
+
+	testIntegerObject(t, testEval(input), 10)
+
+}
