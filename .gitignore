@@ -1,1 +1,4 @@
 authorsrc
+bin/
+tmp/
+style.css

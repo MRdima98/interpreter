@@ -60,7 +60,7 @@ The intention is to add OOP, to be more specific:
 
 ### Additional syntax
 ```js
-// Class examle
+// Class example
 class A {
     let a = 5;
 
