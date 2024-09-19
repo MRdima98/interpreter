@@ -7,11 +7,12 @@
     <link rel="stylesheet" type="text/css" href="./static/tail.css">
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script src="./static/js/main.js"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.2"></script>
   </head>
   <body class="flex flex-col justify-center items-center gap-12 bg-background text-text">
     <h1 class="flex justify-center text-3xl mt-4">Monkey Language</h1>
     <div class="flex flex-row gap-20 w-8/12 justify-center h-[800px]">
-      <div class="flex flex-col justify-center items-center gap-4 w-8/12
+      <form hx-post="/execute" hx-target="#output" class="flex flex-col justify-center items-center gap-4 w-8/12
         ">
         <div class="w-10/12">
           <button class="snippet rounded p-2 bg-btnBg text-black">Snippet 1</button>
@@ -20,13 +21,14 @@
           <button class="snippet rounded p-2 bg-btnBg text-black">Snippet 4</button>
           <button class="snippet rounded p-2 bg-btnBg text-black">Snippet 5</button>
         </div>
-        <textarea id="editor" class="w-10/12 h-4/5 resize-none p-2 rounded outline-0 bg-codeBg text-black"></textarea>
-        <textarea class="w-10/12 h-1/5 resize-none p-2 rounded outline-0 bg-codeBg text-black" readonly></textarea>
-        <button id="execute" class="rounded p-2 bg-btnBg text-black flex items-center gap-2">
-          <span> Execute </span>
+        <textarea id="editor" name="editor" class="w-10/12 h-4/5 resize-none p-2 rounded outline-0 bg-codeBg text-black"></textarea>
+        <textarea id="output" class="w-10/12 h-1/5 resize-none p-2 rounded outline-0 bg-codeBg text-black" readonly></textarea>
+        <button type="submit"
+          id="execute" class="rounded p-2 bg-btnBg text-black flex items-center gap-2">
+          <span>Execute</span>
           <img src="static/icons/gears-solid.svg" alt="exchange icon" width="12" height="12">
         </button>
-      </div>
+      </form>
       <aside class="flex flex-col items-start w-4/12 gap-6">
         <div class="flex flex-row gap-2">
           <button id="swap-syntax" class="bg-btnBg p-2 rounded">

@@ -31,8 +31,8 @@ window.addEventListener('load', function() {
 const snippets = [
     `puts \"Hello world\"`,
     `let a = 5;\nlet b = 5;\na + b`,
-    `let a = fn(a) {\n\treturn a;\n};\na(10);`,
-    `class A {\n\tlet a = 10;\n\tlet b = fn(c) {\n\t\treturn c;\n\t};\n};\nlet d = A();\nd.a;\nd.b(8)`,
+    `let a = fn(a) {\n\treturn a;\n};\na(42);`,
+    `class A {\n\tlet a = 1050;\n\tlet b = fn(c) {\n\t\treturn c;\n\t};\n};\nlet d = new A();\nd.a`,
     `let fibonacci = fn(x) {
 \tif (x == 0) {
 \t\t0
@@ -44,5 +44,6 @@ const snippets = [
 \t\t}
 \t}
 };
+fibonacci(10);
 `
 ]
