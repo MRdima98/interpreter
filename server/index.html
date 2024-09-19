@@ -5,24 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monkey Language</title>
     <link rel="stylesheet" type="text/css" href="./static/tail.css">
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="./static/js/main.js"></script>
   </head>
-  <body class="flex flex-col justify-center items-center">
-    <h1 class="flex justify-center text-3xl">Monkey Language</h1>
-    <div class="flex flex-row gap-20">
-      <div class="flex flex-col justify-center items-center" >
-        <div>
-          <button>snippet</button>
-          <button>snippet</button>
-          <button>snippet</button>
-          <button>snippet</button>
-          <button>snippet</button>
+  <body class="flex flex-col justify-center items-center gap-12 bg-background text-text">
+    <h1 class="flex justify-center text-3xl mt-4">Monkey Language</h1>
+    <div class="flex flex-row gap-20 w-8/12 justify-center h-[800px]">
+      <div class="flex flex-col justify-center items-center gap-4 w-8/12
+        ">
+        <div class="w-10/12">
+          <button class="snippet rounded p-2 bg-btnBg text-black">Snippet 1</button>
+          <button class="snippet rounded p-2 bg-btnBg text-black">Snippet 2</button>
+          <button class="snippet rounded p-2 bg-btnBg text-black">Snippet 3</button>
+          <button class="snippet rounded p-2 bg-btnBg text-black">Snippet 4</button>
+          <button class="snippet rounded p-2 bg-btnBg text-black">Snippet 5</button>
         </div>
-        <input type="text" class="border-solid border-2">
-        <input type="text" class="border-solid border-2">
-        <button>Execute</button>
+        <textarea id="editor" class="w-10/12 h-4/5 resize-none p-2 rounded outline-0 bg-codeBg text-black"></textarea>
+        <textarea class="w-10/12 h-1/5 resize-none p-2 rounded outline-0 bg-codeBg text-black" readonly></textarea>
+        <button id="execute" class="rounded p-2 bg-btnBg text-black flex items-center gap-2">
+          <span> Execute </span>
+          <img src="static/icons/gears-solid.svg" alt="exchange icon" width="12" height="12">
+        </button>
       </div>
-      <aside>
-        here goes the article
+      <aside class="flex flex-col items-start w-4/12 gap-6">
+        <div class="flex flex-row gap-2">
+          <button id="swap-syntax" class="bg-btnBg p-2 rounded">
+            <img src="static/icons/arrow-right-arrow-left-solid.svg" alt="exchange icon" width="12" height="12">
+          </button>
+          <h2 id="title-syntax" class="text-2xl">Basic syntax</h2>
+        </div>
+        <div>
+          <pre id="basic-syntax" class="prettyprint rounded bg-codeBg w-[500px]">
+// Give values names
+let age = 1;
+let name = "Monkey";
+let result = 10 * (20 / 2);
+// Arrays
+let myArray = [1, 2, 3, 4, 5];
+myArray[0] // => 1
+// Hashes
+let thorsten = {"name": "Thorsten", "age": 28};
+thorsten["name"] // => "Thorsten"
+// Functions
+let add = fn(a, b) { return a + b; };
+add(1,2); // => 2
+// Builtins
+len(myArray) // => 5
+puts("Hello") // => Hello
+first(myArray) // => 1
+last(myArray) // => 5
+rest(myArray) // => [2, 3, 4, 5]
+push(myArray, 6) // => [1, 2, 3, 4, 5, 6]
+          </pre>
+          <pre id="mySyntax" hidden class="prettyprint rounded bg-codeBg w-[500px]">
+// Class example
+class A {
+    let a = 5;
+
+    let method = fn () {
+        return 3;
+    };
+};
+let a = new A();
+a.a; // => 5
+a.method(); // => 3
+
+// Inheritance
+class B : A { };
+          </pre>
+        </div>
       </aside>
     </div>
   </body>
