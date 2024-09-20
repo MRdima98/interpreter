@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <title>Monkey Language</title>
     <link rel="stylesheet" type="text/css" href="./static/tail.css">
     <link rel="icon" href="./static/icons/monke.png">
@@ -10,35 +10,36 @@
     <script src="./static/js/main.js"></script>
     <script src="https://unpkg.com/htmx.org@2.0.2"></script>
   </head>
-  <body class="flex flex-col justify-center items-center gap-12 bg-background text-text">
+  <body class="flex flex-col justify-center items-center gap-12 bg-background text-text w-full">
     <h1 class="flex justify-center text-3xl mt-4">Monkey Language</h1>
-    <div class="flex lg:flex-row flex-col gap-20 lg:w-8/12 w-max lg:justify-center
-      justify-normal h-[800px]">
+    <div class="flex lg:flex-row flex-col gap-20 lg:w-8/12 w-max lg:justify-center lg:items-start items-center
+      h-[800px]">
       <form hx-post="/execute" hx-target="#output"
-        class="flex flex-col lg:items-start items-center gap-4 lg:w-8/12 w-max">
+        class="flex flex-col items-start gap-4 w-8/12 h-full">
         <div class="flex lg:w-10/12 w-max flex-nowrap gap-1">
           <button class="text-nowrap snippet rounded p-2 bg-btnBg text-black">Snippet 1</button>
           <button class="text-nowrap snippet rounded p-2 bg-btnBg text-black">Snippet 2</button>
           <button class="text-nowrap snippet rounded p-2 bg-btnBg text-black">Snippet 3</button>
-          <button class="text-nowrap snippet rounded p-2 bg-btnBg text-black">Snippet 4</button>
-          <button class="text-nowrap snippet rounded p-2 bg-btnBg text-black">Snippet 5</button>
+          <button class="text-nowrap snippet rounded p-2 bg-btnBg text-black lg:visible invisible">Snippet 4</button>
+          <button class="text-nowrap snippet rounded p-2 bg-btnBg text-black lg:visible invisible">Snippet 5</button>
         </div>
-        <textarea id="editor" name="editor" class="w-full lg:h-4/5 h-[400px] resize-none p-2 rounded outline-0 bg-codeBg text-black"></textarea>
+        <textarea id="editor" name="editor"
+          class="w-full lg:h-4/5 h-[400px] resize-none p-2 rounded outline-0 bg-codeBg text-black"></textarea>
         <textarea id="output" class="w-full lg:h-1/5 h-[100px] resize-none p-2 rounded outline-0 bg-codeBg text-black" readonly></textarea>
         <button type="submit"
-          id="execute" class="rounded p-2 bg-btnBg text-black flex items-center gap-2">
+          id="execute" class="self-center rounded p-2 bg-btnBg text-black flex items-center gap-2">
           <span>Execute</span>
           <img src="static/icons/gears-solid.svg" alt="exchange icon" width="12" height="12">
         </button>
       </form>
-      <aside class="flex flex-col items-start lg:w-4/12 w-full gap-6">
+      <aside class="flex flex-col lg:items-start items-center lg:w-4/12 w-8/12 gap-6">
         <div class="flex flex-row gap-2 w-max">
           <button id="swap-syntax" class="bg-btnBg p-2 rounded">
             <img src="static/icons/arrow-right-arrow-left-solid.svg" alt="exchange icon" width="12" height="12">
           </button>
           <h2 id="title-syntax" class="text-2xl">Basic syntax</h2>
         </div>
-        <pre id="basic-syntax" class="prettyprint rounded bg-codeBg lg:w-max w-full">
+        <pre id="basic-syntax" class="overflow-x-scroll prettyprint rounded bg-codeBg lg:w-max w-full">
 // Give values names
 let age = 1;
 let name = "Monkey";
