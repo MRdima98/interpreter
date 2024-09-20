@@ -11,15 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     # - uses: D3rHase/ssh-command-action@latest
-      env:
-        host: ${{ secrets.HOST }}
-        user: ${{ secrets.USER }}
-        private_key: ${{ secrets.PRIVATE_KEY }}
-        host_fingerprint: ${{ secrets.HOST_FINGERPRINT }}
-        command: |
-          cat host
-          cd interpreter
-          git pull
-          docker kill code-server
-          docker run -d -p 8080:8080 code-server
-          docker run -d -p 8080:8080 code-server
+      run:
+        env:
+          host: ${{ secrets.HOST }}
+          user: ${{ secrets.USER }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          host_fingerprint: ${{ secrets.HOST_FINGERPRINT }}
+          command: |
+            cat host
+            cd interpreter
+            git pull
+            docker kill code-server
+            docker run -d -p 8080:8080 code-server
