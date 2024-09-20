@@ -10,7 +10,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps: 
-      run:
+      - run:
         command: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
