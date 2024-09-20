@@ -111,3 +111,16 @@ but I feel educated enough, time to move forward.
 ### Sandbox
 The program will be available as small website, which will execute the code.
 
+### Run
+To run the repl:
+```bash
+go run main.go
+```
+
+To run the server on localhost:8080: 
+```bash
+docker build --tag code-server .
+docker run --publish 8080:8080 code-server
+```
+
+

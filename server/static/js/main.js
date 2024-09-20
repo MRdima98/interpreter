@@ -23,7 +23,7 @@ window.addEventListener('load', function() {
 
     for (let i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener('click', () => {
-            editor.innerHTML = snippets[i];
+            editor.value = snippets[i];
         });
     }
 })
