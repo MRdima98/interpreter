@@ -18,5 +18,5 @@ jobs:
         command: |
           cd interpreter;
           git pull;
-          docker kill code-server;
+          docker kill $(docker ps | grep code-server | awk '{ print $1 }');
           docker run -d -p 8080:8080 code-server
