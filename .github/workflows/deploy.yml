@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - name: Commands
-      run:
-        command: |
+        run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOST }} > ~/.ssh/known_hosts
