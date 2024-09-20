@@ -7,14 +7,15 @@ on:
     branches: [ "master" ]
 
 jobs:
-  - uses: D3rHase/ssh-command-action@latest
-    with:
-      host: ${{ secrets.HOST }}
-      user: ${{ secrets.USER }}
-      private_key: ${{ secrets.PRIVATE_KEY }}
-      command: |
-        cd interpreter
-        git pull
-        docker kill code-server
-        docker run -d -p 8080:8080 code-server
-        docker run -d -p 8080:8080 code-server
+  build:
+    - uses: D3rHase/ssh-command-action@latest
+      with:
+        host: ${{ secrets.HOST }}
+        user: ${{ secrets.USER }}
+        private_key: ${{ secrets.PRIVATE_KEY }}
+        command: |
+          cd interpreter
+          git pull
+          docker kill code-server
+          docker run -d -p 8080:8080 code-server
+          docker run -d -p 8080:8080 code-server
