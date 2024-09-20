@@ -15,11 +15,9 @@ jobs:
         host: ${{ secrets.HOST }}
         user: ${{ secrets.USER }}
         private_key: ${{ secrets.PRIVATE_KEY }}
-        host_fingerprint: ${{ secrets.HOST_FINGERPRINT }}
         command: |
           cat secrets.HOST
           cd interpreter
           git pull
           docker kill code-server
-          docker run -d -p 8080:8080 code-server
           docker run -d -p 8080:8080 code-server
