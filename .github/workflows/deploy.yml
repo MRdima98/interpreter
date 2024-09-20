@@ -10,13 +10,14 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps: 
-    - uses: D3rHase/ssh-command-action@latest
-      with:
-        HOST: ${{ secrets.HOST }}
-        USER: ${{ secrets.USER }}
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        HOST_FINGERPRINT: ${{ secrets.HOST_FINGERPRINT }}
+    # - uses: D3rHase/ssh-command-action@latest
+      env:
+        host: ${{ secrets.HOST }}
+        user: ${{ secrets.USER }}
+        private_key: ${{ secrets.PRIVATE_KEY }}
+        host_fingerprint: ${{ secrets.HOST_FINGERPRINT }}
         command: |
+          cat host
           cd interpreter
           git pull
           docker kill code-server
