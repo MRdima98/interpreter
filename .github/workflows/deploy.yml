@@ -15,7 +15,7 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOST }} > ~/.ssh/known_hosts
-          ssh ${{ secrets.USER }}@${{ secrest.HOST }}
+          ssh ${{ secrets.USER }}@${{ secrets.HOST }}
           cd interpreter
           git pull
           docker kill code-server
