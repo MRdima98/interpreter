@@ -1,5 +1,4 @@
 name: Deploy
-
 on:
   push:
     branches: [ "master" ]
@@ -8,6 +7,9 @@ on:
 
 jobs:
   build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps: 
     - uses: D3rHase/ssh-command-action@latest
       with:
         host: ${{ secrets.HOST }}
