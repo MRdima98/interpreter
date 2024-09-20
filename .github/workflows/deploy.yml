@@ -17,5 +17,6 @@ jobs:
           cd interpreter;
           git pull;
           docker kill $(docker ps | grep code-server | awk '{ print $1 }');
+          cd server;
           docker build --tag code-server .;
           docker run -d -p 8080:8080 code-server
