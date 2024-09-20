@@ -16,6 +16,7 @@ jobs:
         user: ${{ secrets.USER }}
         private_key: ${{ secrets.PRIVATE_KEY }}
         command: |
+          ls
           cd interpreter
           git pull
           docker kill code-server
