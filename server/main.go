@@ -37,7 +37,7 @@ func executeCode(code string) (string, error) {
 	defer cancel()
 
 	code = strings.ReplaceAll(code, "\n", " ")
-	out, err := exec.CommandContext(ctx, "./../executor/executor", code).Output()
+	out, err := exec.CommandContext(ctx, "./executor", code).Output()
 	if err != nil {
 		return "Amazing code! It doens't work, perhaps my fault maybe yours...", err
 	}
