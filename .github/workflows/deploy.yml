@@ -16,7 +16,6 @@ jobs:
     - name: Run multiple remote commands via SSH
       with:
         host: ${{ secrets.HOST }}
-        port: ${{ secrets.PORT }}
         user: ${{ secrets.USER }}
         private_key: ${{ secrets.PRIVATE_KEY }}
         command: |
