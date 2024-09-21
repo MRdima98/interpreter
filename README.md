@@ -2,7 +2,8 @@
 
 This is an interpreter written in Golang following ["Writing An Interpreter In Go"](https://interpreterbook.com/).
 The purpose for the project was personal education.
-If you want to try it, without downloading anything, you can ["here"](https://monkey.mrdima98.dev).
+
+If you want to try it, without downloading anything, you can [here](https://monkey.mrdima98.dev).
 
 ## Language Specifications
 
