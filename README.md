@@ -2,6 +2,7 @@
 
 This is an interpreter written in Golang following ["Writing An Interpreter In Go"](https://interpreterbook.com/).
 The purpose for the project was personal education.
+If you want to try it, without downloading anything, you can ["here"](https://monkey.mrdima98.dev).
 
 ## Language Specifications
 
@@ -107,9 +108,6 @@ d.getD(); // => 5
 
 Unfortunately assign operation is not supported by the language, I could add it...
 but I feel educated enough, time to move forward.
-
-### Sandbox
-The program will be available as small website, which will execute the code.
 
 ### Run
 To run the repl:
