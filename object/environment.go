@@ -24,6 +24,9 @@ type Environment struct {
 }
 
 func (e *Environment) Get(name string) (Object, bool) {
+	if e == nil {
+		return nil, false
+	}
 	obj, ok := e.store[name]
 	if !ok && e.outer != nil {
 		obj, ok = e.outer.Get(name)

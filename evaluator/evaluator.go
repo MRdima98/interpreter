@@ -121,6 +121,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 					return newError("No attribute like this!")
 				}
 			}
+			if env.GetClassEnv(node.TokenLiteral()) == nil {
+				return Eval(node.Variable, env)
+			}
 			return Eval(node.Variable, env.GetClassEnv(node.TokenLiteral()))
 		}
 		if node.Function != nil {

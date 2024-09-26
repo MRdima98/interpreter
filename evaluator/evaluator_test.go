@@ -623,3 +623,15 @@ func TestClassGetter(t *testing.T) {
 	testIntegerObject(t, testEval(input), 10)
 
 }
+
+func TestClassPostfix(t *testing.T) {
+	input := `class A {
+		let d = 10;
+		let c = 10;
+	};
+	let gimmy = new A();
+	gimmy.d + gimmy.c
+	`
+
+	testIntegerObject(t, testEval(input), 20)
+}
